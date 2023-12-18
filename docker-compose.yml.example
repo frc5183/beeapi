@@ -1,0 +1,8 @@
+services:
+    beeapi:
+        image: ghcr.io/frc5183/beeapi:latest
+        restart: always
+        ports:
+            - 8080:8080
+        volumes:
+            - ./config:/etc/beeapi

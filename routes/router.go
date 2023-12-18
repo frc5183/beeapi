@@ -1,14 +1,23 @@
 package routes
 
 import (
+	"beeapi/config"
 	otherRoutes "beeapi/routes/other"
 	"github.com/gin-gonic/gin"
 )
 
-var router = gin.Default()
+var router *gin.Engine
 
 var routes = []Route{
 	otherRoutes.HealthRoute{},
+}
+
+func Init() {
+	if !config.GetConfig().Development {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	router = gin.Default()
 }
 
 func RegisterRoutes() {

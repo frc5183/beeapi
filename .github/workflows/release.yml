@@ -1,0 +1,79 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+
+      - name: Build
+        run: go build -v -o ./tmp/beeapi-linux-amd64 ./main.go
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: beeapi-linux-amd64
+          path: ./tmp/beeapi-linux-amd64
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+
+      - name: Build
+        run: go build -v -o ./tmp/beeapi-windows-amd64.exe ./main.go
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: beeapi-windows-amd64.exe
+          path: ./tmp/beeapi-windows-amd64.exe
+
+  publish:
+    needs: [build-linux, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Linux Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: beeapi-linux-amd64
+          path: ./builds
+
+      - name: Download Windows Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: beeapi-windows-amd64.exe
+          path: ./builds
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./build/beeapi-linux-amd64
+            ./build/beeapi-windows-amd64.exe
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body: |
+            Automated release, please set a proper body before publishing.
+          draft: true
+          prerelease: ${{ contains(github.ref, 'pre') || contains(github.ref, 'prerelease') }}
