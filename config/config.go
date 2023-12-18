@@ -10,7 +10,7 @@ import (
 //go:embed config.yml
 var defaultConfigFile []byte
 
-var Configuration *Config
+var conf *Config
 
 const (
 	DefaultConfigFilePath = "/etc/beeapi/config.yml"
@@ -28,8 +28,8 @@ type Config struct {
 	Development bool `yaml:"development"`
 }
 
-func GenerateConfig() {
-	Configuration = &Config{}
+func Init() {
+	conf = &Config{}
 
 	configFile, err := os.Open(DefaultConfigFilePath)
 
@@ -38,7 +38,7 @@ func GenerateConfig() {
 		panic("Created config file. Please edit it and restart the application.")
 	}
 
-	err = yaml.NewDecoder(configFile).Decode(Configuration)
+	err = yaml.NewDecoder(configFile).Decode(conf)
 
 	if err != nil {
 		panic(err)
@@ -68,4 +68,8 @@ func createConfigFile() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func GetConfig() *Config {
+	return conf
 }

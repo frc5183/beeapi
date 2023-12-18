@@ -8,7 +8,7 @@ import (
 )
 
 func respond(context *gin.Context, response *response.Response) {
-	if config.Configuration.Development {
+	if config.GetConfig().Development {
 		for _, err := range response.Errors {
 			if err.NativeError != nil {
 				log.Info().Msgf("Error: %s", err.NativeError.Error())

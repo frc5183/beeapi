@@ -19,11 +19,11 @@ var mdls = []interface{}{
 
 func Init() {
 	cfg := mysql2.NewConfig()
-	cfg.User = config.Configuration.Database.User
-	cfg.Passwd = config.Configuration.Database.Password
+	cfg.User = config.GetConfig().Database.User
+	cfg.Passwd = config.GetConfig().Database.Password
 	cfg.Net = "tcp"
-	cfg.Addr = config.Configuration.Database.Host + ":" + strconv.Itoa(config.Configuration.Database.Port)
-	cfg.DBName = config.Configuration.Database.Name
+	cfg.Addr = config.GetConfig().Database.Host + ":" + strconv.Itoa(config.GetConfig().Database.Port)
+	cfg.DBName = config.GetConfig().Database.Name
 	cfg.ParseTime = true
 	cfg.MultiStatements = true
 

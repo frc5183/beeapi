@@ -4,15 +4,14 @@ import (
 	"beeapi/config"
 	"beeapi/database"
 	"beeapi/routes"
-	"github.com/rs/zerolog/log"
 )
 
 func main() {
-	config.GenerateConfig()
-
-	log.Info().Msg("wsg")
+	config.Init()
 
 	database.Init()
+
+	routes.Init()
 
 	routes.RegisterRoutes()
 
