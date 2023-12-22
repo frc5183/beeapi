@@ -11,7 +11,6 @@ import (
 type ItemDeleteRoute struct{}
 
 func (route ItemDeleteRoute) GetPath() string {
-	// todo: change this to /item/:id, current router does not allow for it
 	return "/item"
 }
 

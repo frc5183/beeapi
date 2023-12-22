@@ -12,7 +12,6 @@ import (
 type ItemGetRoute struct{}
 
 func (route ItemGetRoute) GetPath() string {
-	// todo: change this to /item/:id, current router does not allow for it
 	return "/item"
 }
 
