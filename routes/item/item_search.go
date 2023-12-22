@@ -6,6 +6,7 @@ import (
 	"beeapi/response"
 	"github.com/gin-gonic/gin"
 	"github.com/lithammer/fuzzysearch/fuzzy"
+	"gorm.io/gorm"
 )
 
 type ItemSearchRoute struct{}
@@ -32,7 +33,13 @@ func (route ItemSearchRoute) Handle(context *gin.Context) *response.Response {
 		return response.CreateFatalResponse("No search term specified", []*response.Error{response.CreateError(response.ErrorCodeInvalidRequest, "No search term specified", nil)}, 400)
 	}
 
-	resp := database.GetDB().Find(&items)
+	var resp *gorm.DB
+	if includeDeleted, exists := context.GetQuery("includeDeleted"); exists && includeDeleted == "true" {
+		resp = database.GetDB().Unscoped().Find(&items)
+	} else {
+		resp = database.GetDB().Find(&items)
+	}
+
 	if resp.Error != nil {
 		return response.CreateFatalResponse("Failed to get items.", []*response.Error{response.CreateError(response.ErrorCodeInternalServerError, "Failed to get items.", resp.Error)}, 500)
 	}

@@ -5,6 +5,7 @@ import (
 	"beeapi/models"
 	"beeapi/response"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"strconv"
 )
 
@@ -46,7 +47,12 @@ func (route ItemGetAllRoute) Handle(context *gin.Context) *response.Response {
 		return response.CreateFatalResponse("Limit is not valid", []*response.Error{response.CreateError(response.ErrorCodeInvalidRequest, "limit must be set with offset", nil)}, 400)
 	}
 
-	resp := database.GetDB().Limit(limit).Offset(offset).Find(&items)
+	var resp *gorm.DB
+	if includeDeleted, exists := context.GetQuery("includeDeleted"); exists && includeDeleted == "true" {
+		resp = database.GetDB().Unscoped().Limit(limit).Offset(offset).Find(&items)
+	} else {
+		resp = database.GetDB().Limit(limit).Offset(offset).Find(&items)
+	}
 
 	if resp.Error != nil {
 		return response.CreateFatalResponse("Failed to query items.", []*response.Error{response.CreateError(response.ErrorCodeInternalServerError, "Failed to query items.", resp.Error)}, 500)

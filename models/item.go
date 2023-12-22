@@ -57,8 +57,9 @@ func (item *Item) Marshal() (interface{}, error) {
 
 		Location string `json:"location,omitempty"`
 
-		CreatedAt time.Time `json:"createdAt"`
-		UpdatedAt time.Time `json:"updatedAt"`
+		CreatedAt time.Time  `json:"createdAt"`
+		UpdatedAt time.Time  `json:"updatedAt"`
+		DeletedAt *time.Time `json:"deletedAt,omitempty"`
 	}
 
 	data, err := json.Marshal(item)
@@ -120,6 +121,9 @@ func (item *Item) Unmarshal(data []byte) error {
 
 	if &store.CustomFields != nil {
 		// We have to do this otherwise it will delete completely omitted custom fields.
+		if item.CustomFields == nil {
+			item.CustomFields = make(map[string]interface{})
+		}
 		for key, value := range store.CustomFields {
 			item.CustomFields[key] = value
 		}

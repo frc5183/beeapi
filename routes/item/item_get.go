@@ -5,6 +5,7 @@ import (
 	"beeapi/models"
 	"beeapi/response"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"strconv"
 )
 
@@ -35,7 +36,12 @@ func (route ItemGetRoute) Handle(context *gin.Context) *response.Response {
 		}
 
 		var item = &models.Item{}
-		resp := database.GetDB().Find(item, "id = ?", id)
+		var resp *gorm.DB
+		if includeDeleted, exists := context.GetQuery("includeDeleted"); exists && includeDeleted == "true" {
+			resp = database.GetDB().Unscoped().Find(item, "id = ?", id)
+		} else {
+			resp = database.GetDB().Find(item, "id = ?", id)
+		}
 
 		if resp.Error != nil {
 			return response.CreateFatalResponse("Failed to query item.", []*response.Error{response.CreateError(response.ErrorCodeInternalServerError, "Failed to query item.", resp.Error)}, 500)
