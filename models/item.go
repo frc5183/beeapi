@@ -119,7 +119,10 @@ func (item *Item) Unmarshal(data []byte) error {
 	}
 
 	if &store.CustomFields != nil {
-		item.CustomFields = store.CustomFields
+		// We have to do this otherwise it will delete completely omitted custom fields.
+		for key, value := range store.CustomFields {
+			item.CustomFields[key] = value
+		}
 	}
 
 	if &store.Location != nil {
