@@ -45,7 +45,7 @@ func Init() {
 // TODO: Add custom migrations system
 func migrate() {
 	for _, model := range mdls {
-		err := db.AutoMigrate(model)
+		err := db.AutoMigrate(&model)
 		if err != nil {
 			panic(err)
 		}

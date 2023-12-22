@@ -4,3 +4,15 @@ database:
   user: beeapi
   password: beeapi
   name: beeapi
+
+barcode:
+  imageWidth: 200
+  imageHeight: 130
+
+  barcodeWidth: 200
+  barcodeHeight: 100
+
+  label: BeeAPI
+  labelSize: 13
+  labelX: 80
+  labelY: 115
