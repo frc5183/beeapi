@@ -25,6 +25,19 @@ type Config struct {
 		Name     string `yaml:"name"`
 	} `yaml:"database"`
 
+	Barcode struct {
+		ImageWidth  uint `yaml:"imageWidth"`
+		ImageHeight uint `yaml:"imageHeight"`
+
+		BarcodeWidth  uint `yaml:"barcodeWidth"`
+		BarcodeHeight uint `yaml:"barcodeHeight"`
+
+		LabelSize uint   `yaml:"labelSize"`
+		Label     string `yaml:"label"`
+		LabelX    uint   `yaml:"labelX"`
+		LabelY    uint   `yaml:"labelY"`
+	} `yaml:"barcode"`
+
 	Development bool `yaml:"development"`
 }
 
