@@ -4,7 +4,6 @@ import (
 	"beeapi/database"
 	"beeapi/models"
 	"beeapi/response"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -37,8 +36,6 @@ func (route ItemDeleteRoute) Handle(context *gin.Context) *response.Response {
 
 		var item = &models.Item{}
 		resp := database.GetDB().Delete(item, "id = ?", id)
-
-		fmt.Println(resp)
 
 		if resp.Error != nil {
 			return response.CreateFatalResponse("Failed to delete item.", []*response.Error{response.CreateError(response.ErrorCodeInternalServerError, "Failed to delete item.", resp.Error)}, 500)
